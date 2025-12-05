@@ -1,25 +1,26 @@
-﻿using ExamTwo.Infrastructure;
+﻿using ExamTwo.Application.Ports;
+using ExamTwo.Infrastructure;
 
 namespace ExamTwo.Application.UseCases
 {
   public class CoffeeMachineQuery : ICoffeeMachineQuery
   {
-    private readonly CoffeeMachineDataStore _db;
-    public CoffeeMachineQuery(CoffeeMachineDataStore db)
+    private readonly ICoffeeMachineRepository _repo;
+    public CoffeeMachineQuery(ICoffeeMachineRepository repo)
     {
-      _db = db;
+      _repo = repo;
     }
-    public Task<Dictionary<string, int>> GetCoffeesAsync()
+    public Task<Dictionary<string, int>> GetCoffees()
     {
-      return Task.FromResult(_db.coffeeQuantities);
+      return _repo.GetCoffees();
     }
-    public Task<Dictionary<string, int>> GetCoffeePricesAsync()
+    public Task<Dictionary<string, int>> GetCoffeePrices()
     {
-      return Task.FromResult(_db.coffeePrices);
+      return _repo.GetCoffeePrices();
     }
-    public Task<Dictionary<int, int>> GetChangeAsync()
+    public Task<Dictionary<int, int>> GetCoinInventory()
     {
-      return Task.FromResult(_db.change);
+      return _repo.GetCoinInventory();
     }
   }
 }

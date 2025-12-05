@@ -1,3 +1,4 @@
+using ExamTwo.Application.Ports;
 using ExamTwo.Application.UseCases;
 using ExamTwo.Infrastructure;
 
@@ -14,6 +15,7 @@ builder.Services.AddSingleton<CoffeeMachineDataStore>();
 
 builder.Services.AddScoped<ICoffeeMachineQuery, CoffeeMachineQuery>();
 builder.Services.AddScoped<ICoffeeMachineCommand, CoffeeMachineCommand>();
+builder.Services.AddScoped<ICoffeeMachineRepository, CoffeeMachineRepository>();
 
 
 var app = builder.Build();

@@ -1,65 +1,79 @@
-﻿using ExamTwo.Domain;
+﻿using ExamTwo.Application.Ports;
+using ExamTwo.Domain;
 using ExamTwo.Infrastructure;
 
 namespace ExamTwo.Application.UseCases
 {
   public class CoffeeMachineCommand : ICoffeeMachineCommand
   {
-    private readonly CoffeeMachineDataStore _db;
-    public CoffeeMachineCommand(CoffeeMachineDataStore db)
+    private readonly ICoffeeMachineRepository _repo;
+    public CoffeeMachineCommand(ICoffeeMachineRepository repo)
     {
-      _db = db;
+      _repo = repo;
     }
-    public Task<string> BuyCoffeeAsync(OrderRequest request)
+    public async Task<string> BuyCoffeeAsync(OrderRequest request)
     {
       if (request.Order == null || request.Order.Count == 0)
-        return Task.FromResult("Orden vacia.");
+        throw new ArgumentException("Orden vacia.");
 
       if (request.Payment.TotalAmount <= 0)
-        return Task.FromResult("Dinero insuficiente ");
+        throw new ArgumentException("Dinero insuficiente");
 
       try
       {
-        var costoTotal = request.Order.Sum(o => _db.coffeePrices.First(c => c.Key == o.Key).Value * o.Value);
+        var availableCoffees = await _repo.GetCoffees();
+        var coffeePrices = await _repo.GetCoffeePrices();
+        var availableCoins = await _repo.GetCoinInventory();
+
+        foreach (var coffee in request.Order)
+        {
+          if (!availableCoffees.ContainsKey(coffee.Key))
+            throw new ArgumentException($"Café {coffee.Key} no está disponible.");
+
+          if (coffee.Value > availableCoffees[coffee.Key])
+            throw new ArgumentException($"No hay suficientes {coffee.Key} en la máquina.");
+        }
+
+        var costoTotal = request.Order.Sum(o => coffeePrices[o.Key] * o.Value);
 
         if (request.Payment.TotalAmount < costoTotal)
-        {
-          return Task.FromResult("Dinero insuficiente ");
-        }
-
-        foreach (var cafe in request.Order)
-        {
-          var selected = _db.coffeeQuantities.First(c => c.Key == cafe.Key).Key;
-          if (cafe.Value > _db.coffeeQuantities[selected])
-          {
-            return Task.FromResult($"No hay suficientes {selected} en la máquina.");
-          }
-          _db.coffeeQuantities[selected] -= cafe.Value;
-        }
+          throw new ArgumentException("Dinero ingresado es insuficiente");
 
         var change = request.Payment.TotalAmount - costoTotal;
-        String result = $"Su vuelto es de: {change} colones. Desglose:";
 
-        foreach (var coin in _db.change.Keys.OrderByDescending(c => c))
+        var usedCoins = new Dictionary<int, int>();
+        string coinBreakdown = "";
+        foreach (var coin in availableCoins.OrderByDescending(c => c.Key))
         {
-          var count = Math.Min(change / coin, _db.change[coin]);
+          var count = Math.Min(change / coin.Key, coin.Value);
           if (count > 0)
           {
-            result += $" {count} moneda de {coin},  ";
-            change -= coin * count;
+            coinBreakdown += $" {count} moneda de {coin.Key},  ";
+            usedCoins[coin.Key] = count;
+            change -= coin.Key * count;
           }
         }
 
         if (change > 0)
+          throw new ArgumentException("No hay suficiente cambio en la máquina.");
+
+        foreach (var coffee in request.Order)
         {
-          return Task.FromResult("No hay suficiente cambio en la máquina.");
+          await _repo.UpdateCoffeeQuantities(coffee.Key, coffee.Value);
         }
 
-        return Task.FromResult(result);
+        foreach (var coin in usedCoins)
+        {
+          await _repo.UpdateCoinInventory(coin.Key, coin.Value);
+        }
+
+        string result = $"Su vuelto es de: {request.Payment.TotalAmount - costoTotal} colones. Desglose:{coinBreakdown}";
+
+        return result;
       }
       catch (ArgumentException ex)
       {
-        return Task.FromResult(ex.Message);
+        return ex.Message;
       }
     }
   }
