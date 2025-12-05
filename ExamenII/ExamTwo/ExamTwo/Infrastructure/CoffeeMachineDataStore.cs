@@ -1,21 +1,15 @@
-﻿namespace ExamTwo.Infrastructure
+﻿using ExamTwo.Domain;
+
+namespace ExamTwo.Infrastructure
 {
   public class CoffeeMachineDataStore
   {
-    public Dictionary<string, int> coffeeQuantities = new Dictionary<string, int>
+    public Dictionary<string, CoffeeData> coffees = new Dictionary<string, CoffeeData>
     {
-      { "Americano", 10 },
-      { "Cappuccino", 8 },
-      { "Lates", 10 },
-      { "Mocaccino", 15}
-    };
-
-    public Dictionary<string, int> coffeePrices = new Dictionary<string, int>
-    {
-      { "Americano", 950 },
-      { "Cappuccino", 1200 },
-      { "Lates", 1350 },
-      { "Mocaccino", 1500}
+      { "Americano", new CoffeeData(950, 10) },
+      { "Cappuccino", new CoffeeData(1200, 8) },
+      { "Lates", new CoffeeData(1350, 10) },
+      { "Mocaccino", new CoffeeData(1500, 15) }
     };
 
     public Dictionary<int, int> coinInventory = new Dictionary<int, int>

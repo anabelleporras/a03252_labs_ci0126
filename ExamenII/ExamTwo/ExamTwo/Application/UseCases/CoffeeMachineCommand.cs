@@ -22,7 +22,6 @@ namespace ExamTwo.Application.UseCases
       try
       {
         var availableCoffees = await _repo.GetCoffees();
-        var coffeePrices = await _repo.GetCoffeePrices();
         var availableCoins = await _repo.GetCoinInventory();
 
         foreach (var coffee in request.Order)
@@ -30,11 +29,11 @@ namespace ExamTwo.Application.UseCases
           if (!availableCoffees.ContainsKey(coffee.Key))
             throw new ArgumentException($"Café {coffee.Key} no está disponible.");
 
-          if (coffee.Value > availableCoffees[coffee.Key])
+          if (coffee.Value > availableCoffees[coffee.Key].Quantity)
             throw new ArgumentException($"No hay suficientes {coffee.Key} en la máquina.");
         }
 
-        var costoTotal = request.Order.Sum(o => coffeePrices[o.Key] * o.Value);
+        var costoTotal = request.Order.Sum(o => availableCoffees[o.Key].Price * o.Value);
 
         if (request.Payment.TotalAmount < costoTotal)
           throw new ArgumentException("Dinero ingresado es insuficiente");

@@ -1,9 +1,10 @@
-﻿namespace ExamTwo.Application.UseCases
+﻿using ExamTwo.Domain;
+
+namespace ExamTwo.Application.UseCases
 {
   public interface ICoffeeMachineQuery
   {
-    Task<Dictionary<string, int>> GetCoffees();
-    Task<Dictionary<string, int>> GetCoffeePrices();
+    Task<Dictionary<string, CoffeeData>> GetCoffees();
     Task<Dictionary<int, int>> GetCoinInventory();
   }
 }

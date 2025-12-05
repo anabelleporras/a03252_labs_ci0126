@@ -18,21 +18,9 @@ namespace ExamTwo.Controllers
     }
 
     [HttpGet("Coffee")]
-    public ActionResult<Dictionary<string, int>> GetCoffees()
+    public ActionResult<Dictionary<string, CoffeeData>> GetCoffees()
     {
       return Ok(_query.GetCoffees());
-    }
-
-    [HttpGet("Price")]
-    public ActionResult<Dictionary<string, int>> GetCoffeePrices()
-    {
-      return Ok(_query.GetCoffeePrices());
-    }
-
-    [HttpGet("Change")]
-    public ActionResult<Dictionary<string, int>> GetChange()
-    {
-      return Ok(_query.GetCoinInventory());
     }
 
     [HttpPost("Coffee")]

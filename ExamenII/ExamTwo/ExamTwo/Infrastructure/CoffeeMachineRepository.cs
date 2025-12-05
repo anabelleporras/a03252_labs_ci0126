@@ -1,4 +1,5 @@
 ﻿using ExamTwo.Application.Ports;
+using ExamTwo.Domain;
 
 namespace ExamTwo.Infrastructure
 {
@@ -9,13 +10,9 @@ namespace ExamTwo.Infrastructure
     {
       _dataStore = dataStore;
     }
-    public Task<Dictionary<string, int>> GetCoffees()
+    public Task<Dictionary<string, CoffeeData>> GetCoffees()
     {
-      return Task.FromResult(_dataStore.coffeeQuantities);
-    }
-    public Task<Dictionary<string, int>> GetCoffeePrices()
-    {
-      return Task.FromResult(_dataStore.coffeePrices);
+      return Task.FromResult(_dataStore.coffees);
     }
     public Task<Dictionary<int, int>> GetCoinInventory()
     {
@@ -23,7 +20,7 @@ namespace ExamTwo.Infrastructure
     }
     public Task UpdateCoffeeQuantities(string coffee, int quantity)
     {
-      _dataStore.coffeeQuantities[coffee] -= quantity;
+      _dataStore.coffees[coffee].Quantity -= quantity;
       return Task.CompletedTask;
     }
     public Task UpdateCoinInventory(int denomination, int count)

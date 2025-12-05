@@ -1,4 +1,5 @@
 ﻿using ExamTwo.Application.Ports;
+using ExamTwo.Domain;
 using ExamTwo.Infrastructure;
 
 namespace ExamTwo.Application.UseCases
@@ -10,13 +11,9 @@ namespace ExamTwo.Application.UseCases
     {
       _repo = repo;
     }
-    public Task<Dictionary<string, int>> GetCoffees()
+    public Task<Dictionary<string, CoffeeData>> GetCoffees()
     {
       return _repo.GetCoffees();
-    }
-    public Task<Dictionary<string, int>> GetCoffeePrices()
-    {
-      return _repo.GetCoffeePrices();
     }
     public Task<Dictionary<int, int>> GetCoinInventory()
     {
