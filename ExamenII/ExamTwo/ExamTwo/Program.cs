@@ -1,4 +1,5 @@
-using ExamTwo.Controllers;
+using ExamTwo.Application.UseCases;
+using ExamTwo.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<Database>();
+builder.Services.AddSingleton<CoffeeMachineDataStore>();
+
+builder.Services.AddScoped<ICoffeeMachineQuery, CoffeeMachineQuery>();
+builder.Services.AddScoped<ICoffeeMachineCommand, CoffeeMachineCommand>();
+
 
 var app = builder.Build();
 
