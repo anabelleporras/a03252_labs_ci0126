@@ -5,6 +5,17 @@ using ExamTwo.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("AllowVueClient", policy =>
+  {
+    policy
+        .WithOrigins("http://localhost:8080") // tu frontend
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+  });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -20,6 +31,8 @@ builder.Services.AddScoped<ICoffeeMachineRepository, CoffeeMachineRepository>();
 
 
 var app = builder.Build();
+
+app.UseCors("AllowVueClient");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
