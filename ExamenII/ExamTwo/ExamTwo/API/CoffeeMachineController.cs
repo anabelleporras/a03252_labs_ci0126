@@ -7,6 +7,8 @@ using ExamTwo.Domain.DTOs;
 
 namespace ExamTwo.Controllers
 {
+  [ApiController]
+  [Route("api/[controller]")]
   public class CoffeeMachineController : Controller
   {
     private readonly ICoffeeMachineQuery _query;
@@ -18,13 +20,13 @@ namespace ExamTwo.Controllers
       _command = command;
     }
 
-    [HttpGet("Coffee")]
+    [HttpGet()]
     public ActionResult<Dictionary<string, CoffeeData>> GetCoffees()
     {
       return Ok(_query.GetCoffees());
     }
 
-    [HttpPost("Coffee")]
+    [HttpPost()]
     public ActionResult<string> BuyCoffee([FromBody] OrderRequest request)
     {
       try
