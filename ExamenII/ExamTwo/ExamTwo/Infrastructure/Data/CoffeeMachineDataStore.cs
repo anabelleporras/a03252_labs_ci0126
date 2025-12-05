@@ -8,7 +8,7 @@ namespace ExamTwo.Infrastructure.Data
     {
       { "Americano", new CoffeeData(950, 10) },
       { "Cappuccino", new CoffeeData(1200, 8) },
-      { "Lates", new CoffeeData(1350, 10) },
+      { "Latte", new CoffeeData(1350, 10) },
       { "Mocaccino", new CoffeeData(1500, 15) }
     };
 
