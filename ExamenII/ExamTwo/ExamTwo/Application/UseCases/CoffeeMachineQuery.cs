@@ -1,5 +1,5 @@
 ﻿using ExamTwo.Application.Ports;
-using ExamTwo.Domain;
+using ExamTwo.Domain.Entities;
 using ExamTwo.Infrastructure;
 
 namespace ExamTwo.Application.UseCases

@@ -1,6 +1,6 @@
-﻿using ExamTwo.Domain;
+﻿using ExamTwo.Domain.Entities;
 
-namespace ExamTwo.Infrastructure
+namespace ExamTwo.Infrastructure.Data
 {
   public class CoffeeMachineDataStore
   {
@@ -17,7 +17,7 @@ namespace ExamTwo.Infrastructure
       { 500, 20 },
       { 100, 30 },
       { 50, 50 },
-      { 25, 25}
+      { 25, 25 }
     };
   }
 }

@@ -1,4 +1,4 @@
-﻿namespace ExamTwo.Domain
+﻿namespace ExamTwo.Domain.Entities
 {
   public class CoffeeData
   {

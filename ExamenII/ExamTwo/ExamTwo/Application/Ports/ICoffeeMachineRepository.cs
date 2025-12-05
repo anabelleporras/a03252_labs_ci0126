@@ -1,4 +1,4 @@
-﻿using ExamTwo.Domain;
+﻿using ExamTwo.Domain.Entities;
 
 namespace ExamTwo.Application.Ports
 {

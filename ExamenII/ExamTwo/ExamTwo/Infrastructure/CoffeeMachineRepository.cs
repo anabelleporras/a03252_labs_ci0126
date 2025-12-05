@@ -1,5 +1,6 @@
 ﻿using ExamTwo.Application.Ports;
-using ExamTwo.Domain;
+using ExamTwo.Domain.Entities;
+using ExamTwo.Infrastructure.Data;
 
 namespace ExamTwo.Infrastructure
 {

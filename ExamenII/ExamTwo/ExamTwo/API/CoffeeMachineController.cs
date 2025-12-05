@@ -1,8 +1,9 @@
 ﻿using ExamTwo.Infrastructure;
-using ExamTwo.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ExamTwo.Application.UseCases;
+using ExamTwo.Domain.Entities;
+using ExamTwo.Domain.DTOs;
 
 namespace ExamTwo.Controllers
 {

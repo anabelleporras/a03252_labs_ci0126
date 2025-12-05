@@ -1,4 +1,4 @@
-﻿using ExamTwo.Domain;
+﻿using ExamTwo.Domain.DTOs;
 
 namespace ExamTwo.Application.UseCases
 {

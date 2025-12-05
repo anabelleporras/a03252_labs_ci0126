@@ -1,6 +1,7 @@
 using ExamTwo.Application.Ports;
 using ExamTwo.Application.UseCases;
 using ExamTwo.Infrastructure;
+using ExamTwo.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

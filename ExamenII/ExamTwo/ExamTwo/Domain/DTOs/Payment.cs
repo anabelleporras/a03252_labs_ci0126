@@ -1,4 +1,4 @@
-﻿namespace ExamTwo.Domain
+﻿namespace ExamTwo.Domain.DTOs
 {
   public class Payment
   {
