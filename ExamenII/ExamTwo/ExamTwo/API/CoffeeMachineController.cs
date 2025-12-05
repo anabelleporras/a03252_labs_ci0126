@@ -26,6 +26,12 @@ namespace ExamTwo.Controllers
       return Ok(_query.GetCoffees());
     }
 
+    [HttpGet("Coin")]
+    public ActionResult<Dictionary<int, int>> GetCoinInventory()
+    {
+      return Ok(_query.GetCoinInventory());
+    }
+
     [HttpPost()]
     public ActionResult<string> BuyCoffee([FromBody] OrderRequest request)
     {
