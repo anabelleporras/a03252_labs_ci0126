@@ -2,6 +2,10 @@
   <div class="coffee-page">
     <h1 class="title">La vida es corta, bebe un buen café.</h1>
 
+    <div v-if="outOfOrderMessage" class="oor-message">
+      {{ outOfOrderMessage }}
+    </div>
+
     <div class="subtitle">Ingrese la cantidad de cafes deseados:</div>
 
     <div class="coffee-list">
@@ -13,11 +17,14 @@
         <button class="coffee-button">
           <span>{{ coffee.name }}</span>
           <span>₡ {{ coffee.price }}</span>
+          <span>Disponible: {{ coffee.available }}</span>
         </button>
 
         <input
           type="number"
+          :disabled="coffee.available <= 0"
           min="0"
+          :max="coffee.available"
           class="qty-input"
           v-model.number="coffee.qty"
         />
@@ -85,12 +92,16 @@ export default {
       paymentOptions: [1000, 500, 100, 50, 25],
       paymentTotal: 0,
       paymentDenominations: [],
-      responseMessage: ''
+      responseMessage: '',
+      errorMessage: '',
+      outOfOrderMessage: ''
     };
   },
 
   async mounted() {
+    await this.loadCoins();
     await this.loadCoffees();
+    
   },
 
   computed: {
@@ -102,10 +113,11 @@ export default {
     },
     orderLines() {
       return this.coffees.filter(c => c.qty > 0);
-    }
+    },
   },
   methods: {
     async loadCoffees() {
+      this.errorMessage = "";
       try {
         const response = await urlBaseAPI.get("/api/CoffeeMachine");
         const data = response.data.result;
@@ -117,13 +129,25 @@ export default {
           qty: 0
         }));
       } catch (err) {
-        console.error("Error cargando cafés", err);
+        this.errorMessage = "Error cargando cafés: " + err;
       }
     },
 
     addPayment(amount) {
       this.paymentTotal += amount;
       this.paymentDenominations.push(amount);
+    },
+
+    async loadCoins() {
+      this.outOfOrderMessage = "";
+      const response = await urlBaseAPI.get("/api/CoffeeMachine/Coin");
+      const data = response.data.result;
+      for (const [coin, qty] of Object.entries(data)) {
+        if(qty === 0) {
+          this.outOfOrderMessage = "Fuera de Servicio: no hay sufientes monedas de " + coin + " colones";
+          break;
+        }
+      }
     },
 
     async buyCoffee() {
@@ -178,6 +202,8 @@ export default {
       this.coffees.forEach(c => (c.qty = 0));
       this.paymentTotal = 0;
       this.paymentDenominations = [];
+      this.loadCoins();
+      this.loadCoffees();
     }
   }
 };
@@ -196,6 +222,17 @@ export default {
   font-size: 2.6rem;
   margin-bottom: 1.5rem;
   font-style: italic;
+}
+
+.oor-message {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  background: #ffe6e6;
+  border: 1px solid #e57373;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: #b71c1c;
+  font-weight: 600;
 }
 
 .subtitle {
